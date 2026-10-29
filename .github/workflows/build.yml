@@ -54,6 +54,14 @@ jobs:
         run: |
           npm run typecheck
 
+      # 获取签名密钥并 写入 key.pem
+      - name: Restore signing key
+        run: |
+          echo "$KEY_PEM" > key.pem
+          chmod 600 key.pem
+        env:
+          KEY_PEM: ${{ secrets.EXTENSION_KEY_PEM }}
+
       - name: Install dependencies & build
         run: |
           npm run build-release --if-present
