@@ -3,7 +3,7 @@ dist
 dist-native
 node_modules
 builds
-key.pem
+# key.pem
 .idea
 .DS_STORE
 
