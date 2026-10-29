@@ -57,10 +57,10 @@ jobs:
       # 获取签名密钥并 写入 key.pem
       - name: Restore signing key
         run: |
-          echo "$KEY_PEM" > key.pem
+          echo "$KEY_PEM" | base64 -d > key.pem
           chmod 600 key.pem
         env:
-          KEY_PEM: ${{ secrets._KEY_PEM }}
+          KEY_PEM: ${{ secrets.EXTENSION_KEY_PEM_B64 }}
 
       - name: Install dependencies & build
         run: |
