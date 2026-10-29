@@ -10,7 +10,8 @@ import {
   HttpError, CancelledSyncError,
   LockFileError, MissingPermissionsError,
   NetworkError, RedirectError, ResourceLockedError,
-  SlashError, FileSizeMismatch, FileSizeUnknown, InvalidUrlError
+  SlashError, FileSizeMismatch, FileSizeUnknown, InvalidUrlError,
+  MissingItemIdsError
 } from '../../errors/Error'
 import { CapacitorHttp as Http } from '@capacitor/core'
 import Html from '../serializers/Html'
@@ -262,6 +263,26 @@ export default class WebDavAdapter extends CachingAdapter {
       //   }
       // }
 
+    //   switch (this.server.bookmark_file_type) {
+    //     case 'xbel':
+    //       if (!xmlDocText.includes('<?xml version="1.0" encoding="UTF-8"?>')) {
+    //         throw new FileUnreadableError()
+    //       }
+    //       this.bookmarksCache = XbelSerializer.deserialize(xmlDocText)
+    //       break
+    //     case 'html':
+    //       if (!xmlDocText.includes('<!DOCTYPE NETSCAPE-Bookmark-file-1>')) {
+    //         throw new FileUnreadableError()
+    //       }
+    //       this.bookmarksCache = Html.deserialize(xmlDocText)
+    //       break
+    //     default:
+    //       throw new Error('Invalid bookmark file type')
+    //   }
+    // }
+
+    let missingIds = false
+    try {
       switch (this.server.bookmark_file_type) {
         case 'xbel':
           if (!xmlDocText.includes('<?xml version="1.0" encoding="UTF-8"?>')) {
@@ -278,6 +299,18 @@ export default class WebDavAdapter extends CachingAdapter {
         default:
           throw new Error('Invalid bookmark file type')
       }
+    } catch (e) {
+      if (e instanceof MissingItemIdsError) {
+        missingIds = true
+      } else {
+        throw e
+      }
+    }
+
+    if (missingIds) {
+      Logger.log('Server file has items without IDs (likely written by another tool). Treating it as empty and overwriting.')
+      this.resetCache()
+      return { status: 404 }
     }
 
     return response
