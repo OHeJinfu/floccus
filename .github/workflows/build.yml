@@ -68,14 +68,21 @@ jobs:
       #     cat doiuse-report.txt
       #     diff doiuse-report.txt doiuse-report.baseline.txt || (echo 'Problem: Build includes CSS that is not compatible with the required browsers. Please check the report above!' && exit 1)
       
-      - name: Upload JS build artifact
-        uses: actions/upload-artifact@v4
+      # - name: Upload JS build artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: js-build-${{ github.sha }}
+      #     path: |
+      #       builds/
+      #     if-no-files-found: warn
+      #     retention-days: 7
+
+      - name: Upload CRX
+        uses: actions/upload-artifact@v7
         with:
-          name: js-build-${{ github.sha }}
-          path: |
-            builds/
-          if-no-files-found: warn
-          retention-days: 7
+          path: builds/*.crx        # crx文件
+          archive: false            # 不打包
+          if-no-files-found: error  # 如果没有找到文件，则报错
 
       - name: Save context
         uses: actions/cache/save@v4
