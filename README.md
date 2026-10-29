@@ -1,4 +1,4 @@
-# ![](https://raw.githubusercontent.com/marcelklehr/floccus/master/icons/logo.png) Floccus
+# ![](https://raw.githubusercontent.com/marcelklehr/floccus/master/icons/logo.png) Floccus-Via浏览器
 
 ![](https://raw.githubusercontent.com/marcelklehr/floccus/develop/img/screen_chrome_wide.png)
 > Sync your bookmarks privately across browsers and devices
